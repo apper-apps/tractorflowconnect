@@ -10,23 +10,59 @@ const Customers = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold text-gray-900">Customers</h1>
-          <p className="mt-1 text-gray-600">Manage your customer database and relationships</p>
+          <p className="mt-1 text-gray-600">Manage your customer database</p>
         </div>
         <div className="mt-4 sm:mt-0 flex space-x-3">
           <Button variant="outline" icon="Download">
             Export List
           </Button>
-          <Button icon="Plus">
-            Add Customer
-          </Button>
         </div>
       </div>
 
-      {/* Coming Soon Card */}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card className="p-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <ApperIcon name="Users" className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Total Customers</p>
+              <p className="text-lg font-semibold text-primary">0</p>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="p-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+              <ApperIcon name="CheckCircle" className="w-5 h-5 text-success" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Active Customers</p>
+              <p className="text-lg font-semibold text-success">0</p>
+            </div>
+          </div>
+        </Card>
+        
+        <Card className="p-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
+              <ApperIcon name="TrendingUp" className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">This Month</p>
+              <p className="text-lg font-semibold text-accent">0</p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Empty State */}
       <Card className="p-12">
         <Empty
-          title="Customer Management Coming Soon"
-          description="This feature will allow you to manage customer information, rental history, and contact details. Stay tuned for updates!"
+          title="No customers found"
+          description="Your customer database is currently empty. Customer records will appear here when available."
           icon="Users"
         />
       </Card>

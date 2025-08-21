@@ -1,4 +1,5 @@
 [
+[],
   {
     "Id": 1,
     "name": "John Deere 5075E",
@@ -71,4 +72,5 @@
     "dailyRate": 4300,
     "imageUrl": ""
   }
+
 ]

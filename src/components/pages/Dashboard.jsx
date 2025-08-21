@@ -76,12 +76,9 @@ const Dashboard = () => {
           <h1 className="text-2xl font-display font-bold text-gray-900">Dashboard</h1>
           <p className="mt-1 text-gray-600">Manage your tractor rental operations</p>
         </div>
-        <div className="mt-4 sm:mt-0 flex space-x-3">
+<div className="mt-4 sm:mt-0 flex space-x-3">
           <Button variant="outline" icon="Download">
             Export Report
-          </Button>
-          <Button icon="Plus">
-            Quick Booking
           </Button>
         </div>
       </div>
