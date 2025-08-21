@@ -37,32 +37,32 @@ const TractorCard = ({ tractor, onBook, onViewDetails }) => {
           <ApperIcon name="Tractor" className="w-16 h-16 text-primary/40" />
         </div>
         <div className="absolute top-3 right-3">
-          <Badge variant={getStatusVariant(tractor.status)}>
-            <ApperIcon name={getStatusIcon(tractor.status)} className="w-3 h-3 mr-1" />
-            {tractor.status}
+<Badge variant={getStatusVariant(tractor.status_c)}>
+            <ApperIcon name={getStatusIcon(tractor.status_c)} className="w-3 h-3 mr-1" />
+            {tractor.status_c}
           </Badge>
         </div>
       </div>
       
       <div className="p-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">{tractor.name}</h3>
-          <p className="text-sm text-gray-600">#{tractor.number}</p>
+<h3 className="text-lg font-semibold text-gray-900 mb-1">{tractor.Name}</h3>
+          <p className="text-sm text-gray-600">#{tractor.number_c}</p>
         </div>
         
         <div className="space-y-2 mb-6">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">Hourly Rate</span>
-            <span className="font-semibold text-primary">₹{tractor.hourlyRate}/hr</span>
+<span className="font-semibold text-primary">₹{tractor.hourly_rate_c}/hr</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">Daily Rate</span>
-            <span className="font-semibold text-primary">₹{tractor.dailyRate}/day</span>
+            <span className="font-semibold text-primary">₹{tractor.daily_rate_c}/day</span>
           </div>
         </div>
         
 <div className="flex space-x-2">
-{tractor.status === "Available" && (
+{tractor.status_c === "Available" && (
 <Button 
 className="flex-1" 
 onClick={() => onBook(tractor)}

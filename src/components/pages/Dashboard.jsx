@@ -58,11 +58,11 @@ const Dashboard = () => {
   // Calculate stats
   const stats = {
     totalTractors: tractors.length,
-    availableTractors: tractors.filter(t => t.status === "Available").length,
-    activeRentals: rentals.filter(r => r.paymentStatus === "Pending").length,
+availableTractors: tractors.filter(t => t.status_c === "Available").length,
+    activeRentals: rentals.filter(r => r.payment_status_c === "Pending").length,
     todayRevenue: rentals
-      .filter(r => new Date(r.startDate).toDateString() === new Date().toDateString())
-      .reduce((sum, r) => sum + r.totalAmount, 0)
+      .filter(r => new Date(r.start_date_c).toDateString() === new Date().toDateString())
+      .reduce((sum, r) => sum + (r.total_amount_c || 0), 0)
   };
 
   if (loading) return <Loading text="Loading dashboard..." />;
@@ -178,17 +178,17 @@ const Dashboard = () => {
                     <ApperIcon name="Calendar" className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {rental.customerName} booked a tractor
+<p className="text-sm font-medium text-gray-900">
+                      {rental.customer_name_c} booked a tractor
                     </p>
                     <p className="text-xs text-gray-500">
-                      {new Date(rental.startDate).toLocaleDateString()} • {rental.farmLocation}
+                      {new Date(rental.start_date_c).toLocaleDateString()} • {rental.farm_location_c}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">₹{rental.totalAmount.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500">{rental.paymentStatus}</p>
+                  <p className="text-sm font-medium text-gray-900">₹{rental.total_amount_c?.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500">{rental.payment_status_c}</p>
                 </div>
               </div>
             ))}

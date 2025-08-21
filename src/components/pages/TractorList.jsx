@@ -45,15 +45,15 @@ const TractorList = () => {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(tractor =>
-        tractor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tractor.number.toLowerCase().includes(searchTerm.toLowerCase())
+filtered = filtered.filter(tractor =>
+        tractor.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tractor.number_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by status
     if (selectedStatus !== "All") {
-      filtered = filtered.filter(tractor => tractor.status === selectedStatus);
+filtered = filtered.filter(tractor => tractor.status_c === selectedStatus);
     }
 
     setFilteredTractors(filtered);
@@ -68,7 +68,7 @@ const TractorList = () => {
   };
 
   const handleBookTractor = (tractor) => {
-    if (tractor.status !== "Available") {
+if (tractor.status_c !== "Available") {
       toast.warning("This tractor is not available for booking");
       return;
     }
@@ -85,8 +85,8 @@ const TractorList = () => {
   };
 
   // Calculate filter counts
-  const statusCounts = tractors.reduce((acc, tractor) => {
-    acc[tractor.status] = (acc[tractor.status] || 0) + 1;
+const statusCounts = tractors.reduce((acc, tractor) => {
+    acc[tractor.status_c] = (acc[tractor.status_c] || 0) + 1;
     return acc;
   }, {});
 

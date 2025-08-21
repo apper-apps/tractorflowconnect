@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
-import { format, startOfMonth, endOfMonth, subMonths } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { endOfMonth, format, startOfMonth, subMonths } from "date-fns";
 import ReactApexChart from "react-apexcharts";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import ApperIcon from "@/components/ApperIcon";
 import { rentalService } from "@/services/api/rentalService";
 import { tractorService } from "@/services/api/tractorService";
 import { paymentService } from "@/services/api/paymentService";
+import ApperIcon from "@/components/ApperIcon";
+import Payments from "@/components/pages/Payments";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Select from "@/components/atoms/Select";
 
 const Reports = () => {
   const [rentals, setRentals] = useState([]);
@@ -63,21 +64,21 @@ const Reports = () => {
   const filterByDateRange = (data, dateField = "startDate") => {
     const { start, end } = getDateRange();
     return data.filter(item => {
-      const itemDate = new Date(item[dateField]);
+const itemDate = new Date(item[dateField]);
       return itemDate >= start && itemDate <= end;
     });
   };
 
   // Calculate revenue data for chart
   const getRevenueChartData = () => {
-    const filteredRentals = filterByDateRange(rentals);
-    const filteredPayments = filterByDateRange(payments, "paidDate").filter(p => p.status === "Completed");
+const filteredRentals = filterByDateRange(rentals, "start_date_c");
+    const filteredPayments = filterByDateRange(payments, "paid_date_c").filter(p => p.status_c === "Completed");
     
     // Group by month
     const monthlyRevenue = {};
-    filteredPayments.forEach(payment => {
-      const month = format(new Date(payment.paidDate), "MMM yyyy");
-      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + payment.amount;
+filteredPayments.forEach(payment => {
+      const month = format(new Date(payment.paid_date_c), "MMM yyyy");
+      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + (payment.amount_c || 0);
     });
 
     const categories = Object.keys(monthlyRevenue).sort();
@@ -96,11 +97,14 @@ const Reports = () => {
   const getTractorUtilizationData = () => {
     const filteredRentals = filterByDateRange(rentals);
     
-    const utilizationData = tractors.map(tractor => {
-      const tractorRentals = filteredRentals.filter(r => r.tractorId === tractor.Id);
-      const revenue = tractorRentals.reduce((sum, rental) => sum + rental.totalAmount, 0);
+const utilizationData = tractors.map(tractor => {
+      const tractorRentals = filteredRentals.filter(r => {
+        const tractorId = r.tractor_id_c?.Id || r.tractor_id_c;
+        return tractorId === tractor.Id;
+      });
+      const revenue = tractorRentals.reduce((sum, rental) => sum + (rental.total_amount_c || 0), 0);
       return {
-        name: tractor.name,
+name: tractor.Name,
         revenue,
         bookings: tractorRentals.length
       };
@@ -116,11 +120,11 @@ const Reports = () => {
   };
 
   // Calculate summary stats
+// Calculate summary stats
   const getSummaryStats = () => {
-    const filteredRentals = filterByDateRange(rentals);
-    const filteredPayments = filterByDateRange(payments, "paidDate").filter(p => p.status === "Completed");
-    
-    const totalRevenue = filteredPayments.reduce((sum, p) => sum + p.amount, 0);
+    const filteredRentals = filterByDateRange(rentals, "start_date_c");
+    const filteredPayments = filterByDateRange(payments, "paid_date_c").filter(p => p.status_c === "Completed");
+    const totalRevenue = filteredPayments.reduce((sum, p) => sum + (p.amount_c || 0), 0);
     const totalBookings = filteredRentals.length;
     const averageBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0;
     const utilizationRate = tractors.length > 0 ? (filteredRentals.length / tractors.length) * 100 : 0;
@@ -307,8 +311,8 @@ const Reports = () => {
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Tractors</h3>
           <div className="space-y-4">
-            {utilizationChart.categories.slice(0, 5).map((name, index) => {
-              const tractor = tractors.find(t => t.name === name);
+{utilizationChart.categories.slice(0, 5).map((name, index) => {
+              const tractor = tractors.find(t => t.Name === name);
               const revenue = utilizationChart.series[0].data[index];
               return (
                 <div key={name} className="flex items-center justify-between">
@@ -318,7 +322,7 @@ const Reports = () => {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">{name}</p>
-                      <p className="text-sm text-gray-500">#{tractor?.number || "N/A"}</p>
+                      <p className="text-sm text-gray-500">#{tractor?.number_c || "N/A"}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -339,26 +343,26 @@ const Reports = () => {
               <span className="font-medium text-gray-900">{tractors.length}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Active Rentals</span>
-              <span className="font-medium text-gray-900">{filterByDateRange(rentals).length}</span>
+<span className="text-gray-600">Active Rentals</span>
+              <span className="font-medium text-gray-900">{filterByDateRange(rentals, "start_date_c").length}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Completed Payments</span>
+<span className="text-gray-600">Completed Payments</span>
               <span className="font-medium text-gray-900">
-                {filterByDateRange(payments, "paidDate").filter(p => p.status === "Completed").length}
+                {filterByDateRange(payments, "paid_date_c").filter(p => p.status_c === "Completed").length}
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">Pending Payments</span>
-              <span className="font-medium text-warning">
-                {filterByDateRange(payments, "paidDate").filter(p => p.status === "Pending").length}
+<span className="font-medium text-warning">
+                {filterByDateRange(payments, "paid_date_c").filter(p => p.status_c === "Pending").length}
               </span>
             </div>
             <div className="flex justify-between items-center py-2">
               <span className="text-gray-600">Collection Rate</span>
               <span className="font-medium text-success">
-                {payments.length > 0 
-                  ? Math.round((payments.filter(p => p.status === "Completed").length / payments.length) * 100)
+{payments.length > 0 
+                  ? Math.round((payments.filter(p => p.status_c === "Completed").length / payments.length) * 100)
                   : 0
                 }%
               </span>

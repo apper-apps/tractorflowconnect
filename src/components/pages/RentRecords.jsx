@@ -52,15 +52,15 @@ const RentRecords = () => {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(rental =>
-        rental.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rental.farmLocation.toLowerCase().includes(searchTerm.toLowerCase())
+filtered = filtered.filter(rental =>
+        rental.customer_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        rental.farm_location_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by payment status
     if (selectedStatus !== "All") {
-      filtered = filtered.filter(rental => rental.paymentStatus === selectedStatus);
+      filtered = filtered.filter(rental => rental.payment_status_c === selectedStatus);
     }
 
     // Sort by start date (newest first)
@@ -77,8 +77,8 @@ const RentRecords = () => {
     setSearchTerm("");
   };
 
-  const getTractorById = (id) => {
-    return tractors.find(t => t.Id === id);
+const getTractorById = (id) => {
+    return tractors.find(t => t.Id === parseInt(id));
   };
 
   const getStatusVariant = (status) => {
@@ -95,8 +95,8 @@ const RentRecords = () => {
   };
 
   // Calculate filter counts
-  const statusCounts = rentals.reduce((acc, rental) => {
-    acc[rental.paymentStatus] = (acc[rental.paymentStatus] || 0) + 1;
+const statusCounts = rentals.reduce((acc, rental) => {
+    acc[rental.payment_status_c] = (acc[rental.payment_status_c] || 0) + 1;
     return acc;
   }, {});
 
@@ -178,7 +178,8 @@ const RentRecords = () => {
       ) : (
         <div className="space-y-4">
           {filteredRentals.map((rental) => {
-            const tractor = getTractorById(rental.tractorId);
+const tractorId = rental.tractor_id_c?.Id || rental.tractor_id_c;
+            const tractor = getTractorById(tractorId);
             return (
               <Card key={rental.Id} className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
@@ -190,10 +191,10 @@ const RentRecords = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {rental.customerName}
+                          {rental.customer_name_c}
                         </h3>
-                        <Badge variant={getStatusVariant(rental.paymentStatus)}>
-                          {rental.paymentStatus}
+                        <Badge variant={getStatusVariant(rental.payment_status_c)}>
+                          {rental.payment_status_c}
                         </Badge>
                       </div>
                       
@@ -201,23 +202,23 @@ const RentRecords = () => {
                         <div>
                           <p className="text-gray-600">Tractor</p>
                           <p className="font-medium text-gray-900">
-                            {tractor ? `${tractor.name} (#${tractor.number})` : "Unknown Tractor"}
+                            {tractor ? `${tractor.Name} (#${tractor.number_c})` : "Unknown Tractor"}
                           </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Location</p>
-                          <p className="font-medium text-gray-900">{rental.farmLocation}</p>
+                          <p className="font-medium text-gray-900">{rental.farm_location_c}</p>
                         </div>
                         <div>
                           <p className="text-gray-600">Rental Period</p>
                           <p className="font-medium text-gray-900">
-                            {format(new Date(rental.startDate), "MMM dd")} - {format(new Date(rental.endDate), "MMM dd, yyyy")}
+                            {format(new Date(rental.start_date_c), "MMM dd")} - {format(new Date(rental.end_date_c), "MMM dd, yyyy")}
                           </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Total Amount</p>
                           <p className="font-semibold text-primary text-lg">
-                            ₹{rental.totalAmount.toLocaleString()}
+                            ₹{rental.total_amount_c?.toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -231,7 +232,7 @@ const RentRecords = () => {
                     <Button variant="outline" size="sm" icon="Edit">
                       Edit
                     </Button>
-                    {rental.paymentStatus === "Pending" && (
+{rental.payment_status_c === "Pending" && (
                       <Button size="sm" icon="CreditCard">
                         Collect Payment
                       </Button>

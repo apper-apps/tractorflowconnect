@@ -52,23 +52,23 @@ const Payments = () => {
 
     // Filter by search term
     if (searchTerm) {
-      const searchRentals = rentals.filter(rental =>
-        rental.customerName.toLowerCase().includes(searchTerm.toLowerCase())
+const searchRentals = rentals.filter(rental =>
+        rental.customer_name_c?.toLowerCase().includes(searchTerm.toLowerCase())
       ).map(r => r.Id);
       
       filtered = filtered.filter(payment =>
-        searchRentals.includes(payment.rentalId) ||
-        payment.method.toLowerCase().includes(searchTerm.toLowerCase())
+        searchRentals.includes(payment.rental_id_c?.Id || payment.rental_id_c) ||
+        payment.method_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by status
-    if (selectedStatus !== "All") {
-      filtered = filtered.filter(payment => payment.status === selectedStatus);
+if (selectedStatus !== "All") {
+      filtered = filtered.filter(payment => payment.status_c === selectedStatus);
     }
 
     // Sort by paid date (newest first)
-    filtered = filtered.sort((a, b) => new Date(b.paidDate) - new Date(a.paidDate));
+filtered = filtered.sort((a, b) => new Date(b.paid_date_c) - new Date(a.paid_date_c));
 
     setFilteredPayments(filtered);
   }, [payments, rentals, searchTerm, selectedStatus]);
@@ -81,8 +81,8 @@ const Payments = () => {
     setSearchTerm("");
   };
 
-  const getRentalById = (id) => {
-    return rentals.find(r => r.Id === id);
+const getRentalById = (id) => {
+    return rentals.find(r => r.Id === parseInt(id));
   };
 
   const getStatusVariant = (status) => {
@@ -114,14 +114,14 @@ const Payments = () => {
   };
 
   // Calculate filter counts and stats
-  const statusCounts = payments.reduce((acc, payment) => {
-    acc[payment.status] = (acc[payment.status] || 0) + 1;
+const statusCounts = payments.reduce((acc, payment) => {
+    acc[payment.status_c] = (acc[payment.status_c] || 0) + 1;
     return acc;
   }, {});
 
   const stats = {
-    totalAmount: payments.filter(p => p.status === "Completed").reduce((sum, p) => sum + p.amount, 0),
-    pendingAmount: payments.filter(p => p.status === "Pending").reduce((sum, p) => sum + p.amount, 0),
+totalAmount: payments.filter(p => p.status_c === "Completed").reduce((sum, p) => sum + p.amount_c, 0),
+    pendingAmount: payments.filter(p => p.status_c === "Pending").reduce((sum, p) => sum + p.amount_c, 0),
     completedPayments: statusCounts["Completed"] || 0,
     pendingPayments: statusCounts["Pending"] || 0
   };
@@ -255,22 +255,23 @@ const Payments = () => {
       ) : (
         <div className="space-y-4">
           {filteredPayments.map((payment) => {
-            const rental = getRentalById(payment.rentalId);
+const rentalId = payment.rental_id_c?.Id || payment.rental_id_c;
+            const rental = getRentalById(rentalId);
             return (
               <Card key={payment.Id} className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                   <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <ApperIcon name={getMethodIcon(payment.method)} className="w-6 h-6 text-primary" />
+                      <ApperIcon name={getMethodIcon(payment.method_c)} className="w-6 h-6 text-primary" />
                     </div>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {rental ? rental.customerName : "Unknown Customer"}
+                          {rental ? rental.customer_name_c : "Unknown Customer"}
                         </h3>
-                        <Badge variant={getStatusVariant(payment.status)}>
-                          {payment.status}
+                        <Badge variant={getStatusVariant(payment.status_c)}>
+                          {payment.status_c}
                         </Badge>
                       </div>
                       
@@ -278,17 +279,17 @@ const Payments = () => {
                         <div>
                           <p className="text-gray-600">Amount</p>
                           <p className="font-semibold text-primary text-lg">
-                            ₹{payment.amount.toLocaleString()}
+                            ₹{payment.amount_c?.toLocaleString()}
                           </p>
                         </div>
                         <div>
                           <p className="text-gray-600">Payment Method</p>
-                          <p className="font-medium text-gray-900 capitalize">{payment.method}</p>
+                          <p className="font-medium text-gray-900 capitalize">{payment.method_c}</p>
                         </div>
                         <div>
                           <p className="text-gray-600">Date</p>
                           <p className="font-medium text-gray-900">
-                            {format(new Date(payment.paidDate), "MMM dd, yyyy")}
+                            {format(new Date(payment.paid_date_c), "MMM dd, yyyy")}
                           </p>
                         </div>
                       </div>
@@ -296,7 +297,7 @@ const Payments = () => {
                       {rental && (
                         <div className="mt-2">
                           <p className="text-sm text-gray-600">
-                            Rental: {rental.farmLocation} • {format(new Date(rental.startDate), "MMM dd")} - {format(new Date(rental.endDate), "MMM dd")}
+                            Rental: {rental.farm_location_c} • {format(new Date(rental.start_date_c), "MMM dd")} - {format(new Date(rental.end_date_c), "MMM dd")}
                           </p>
                         </div>
                       )}
@@ -310,7 +311,7 @@ const Payments = () => {
                     <Button variant="outline" size="sm" icon="Eye">
                       View Details
                     </Button>
-                    {payment.status === "Pending" && (
+{payment.status_c === "Pending" && (
                       <Button size="sm" icon="Check">
                         Confirm
                       </Button>

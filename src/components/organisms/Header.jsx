@@ -60,15 +60,18 @@ const Header = ({ onToggleSidebar }) => {
 </div>
 </div>
 <Button
-variant="ghost"
-size="sm"
-icon="LogOut"
-onClick={() => window.location.href = "/login"}
-className="text-gray-600 hover:text-gray-900"
->
-<span className="hidden sm:inline ml-1">Logout</span>
-</Button>
-</div>
+          variant="ghost"
+          size="sm"
+          icon="LogOut"
+          onClick={() => {
+            const { ApperUI } = window.ApperSDK;
+            ApperUI.logout();
+          }}
+          className="text-gray-600 hover:text-gray-900"
+        >
+          <span className="hidden sm:inline ml-1">Logout</span>
+        </Button>
+        </div>
         </div>
       </div>
     </header>

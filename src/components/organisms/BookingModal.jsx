@@ -54,15 +54,15 @@ const [formData, setFormData] = useState({
     }
   }, [isOpen]);
 
-  // Calculate rent based on hours
+// Calculate rent based on hours
   useEffect(() => {
-    if (formData.startDate && formData.endDate && tractor?.hourlyRate) {
+    if (formData.startDate && formData.endDate && tractor?.hourly_rate_c) {
       const start = new Date(formData.startDate);
       const end = new Date(formData.endDate);
       
       if (end > start) {
         const hours = differenceInHours(end, start);
-        const rent = hours * tractor.hourlyRate;
+        const rent = hours * tractor.hourly_rate_c;
         
         setTotalHours(hours);
         setTotalRent(rent);
@@ -107,24 +107,20 @@ const handleSubmit = async (e) => {
       const selectedCustomer = customers.find(c => c.Id == formData.customerId);
       const selectedDriver = drivers.find(d => d.Id == formData.driverId);
       
-      const rental = {
-        tractorId: tractor.Id,
-        customerId: formData.customerId,
-        customerName: selectedCustomer?.name || "",
-        driverId: formData.driverId,
-        driverName: selectedDriver?.name || "",
-        farmLocation: formData.farmLocation,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        totalHours: totalHours,
-        hourlyRate: tractor.hourlyRate,
-        totalRent: totalRent,
-        paymentAmount: paymentAmount,
-        paymentStatus: paymentAmount >= totalRent ? "Paid" : paymentAmount > 0 ? "Partial" : "Pending"
+const rental = {
+        Name: `Rental for ${selectedCustomer?.name || "Customer"}`,
+        tractor_id_c: tractor.Id,
+        customer_name_c: selectedCustomer?.name || "",
+        farm_location_c: formData.farmLocation,
+        start_date_c: formData.startDate,
+        end_date_c: formData.endDate,
+        rental_type_c: "hourly",
+        total_amount_c: totalRent,
+        payment_status_c: paymentAmount >= totalRent ? "Paid" : paymentAmount > 0 ? "Partial" : "Pending"
       };
 
       await rentalService.create(rental);
-      toast.success(`Rent entry created for ${tractor.name}! Total: ₹${totalRent.toLocaleString()}`);
+      toast.success(`Rent entry created for ${tractor.Name}! Total: ₹${totalRent.toLocaleString()}`);
       onSuccess();
       onClose();
       
@@ -164,9 +160,9 @@ const handleSubmit = async (e) => {
                 <ApperIcon name="Tractor" className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h4 className="font-medium text-gray-900">{tractor.name}</h4>
-                <p className="text-sm text-gray-600">#{tractor.number}</p>
-                <p className="text-sm text-primary">₹{tractor.hourlyRate}/hr • ₹{tractor.dailyRate}/day</p>
+<h4 className="font-medium text-gray-900">{tractor.Name}</h4>
+                <p className="text-sm text-gray-600">#{tractor.number_c}</p>
+                <p className="text-sm text-primary">₹{tractor.hourly_rate_c}/hr • ₹{tractor.daily_rate_c}/day</p>
               </div>
             </div>
           </div>
@@ -246,10 +242,10 @@ const handleSubmit = async (e) => {
                       {totalHours} hour{totalHours !== 1 ? "s" : ""}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+<div className="flex justify-between">
                     <span className="text-gray-600">Rate:</span>
                     <span className="text-gray-900">
-                      ₹{tractor.hourlyRate}/hour
+                      ₹{tractor.hourly_rate_c}/hour
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold text-primary border-t pt-2">
