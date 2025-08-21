@@ -9,49 +9,79 @@ import { rentalService } from "@/services/api/rentalService";
 import { format, differenceInHours, differenceInDays } from "date-fns";
 
 const BookingModal = ({ tractor, isOpen, onClose, onSuccess }) => {
-  const [formData, setFormData] = useState({
-    customerName: "",
+const [formData, setFormData] = useState({
+    customerId: "",
+    driverId: "",
     farmLocation: "",
     startDate: "",
     endDate: "",
-    rentalType: "daily" // daily or hourly
+    paymentAmount: ""
   });
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [duration, setDuration] = useState({ days: 0, hours: 0 });
+  const [customers, setCustomers] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [totalRent, setTotalRent] = useState(0);
+  const [totalHours, setTotalHours] = useState(0);
   const [loading, setLoading] = useState(false);
 
+// Load customers and drivers on component mount
   useEffect(() => {
-    if (formData.startDate && formData.endDate) {
+    const loadData = async () => {
+      try {
+        // Mock data for customers and drivers
+        const mockCustomers = [
+          { Id: 1, name: "Rajesh Kumar", location: "Village Rampur" },
+          { Id: 2, name: "Suresh Patel", location: "Kisan Nagar" },
+          { Id: 3, name: "Mahesh Singh", location: "Krishi Colony" },
+          { Id: 4, name: "Ramesh Yadav", location: "Farmer's Hub" }
+        ];
+        
+        const mockDrivers = [
+          { Id: 1, name: "Vikram Singh", experience: "5 years" },
+          { Id: 2, name: "Arjun Kumar", experience: "8 years" },
+          { Id: 3, name: "Deepak Sharma", experience: "3 years" },
+          { Id: 4, name: "Ravi Patel", experience: "10 years" }
+        ];
+        
+        setCustomers(mockCustomers);
+        setDrivers(mockDrivers);
+      } catch (error) {
+        toast.error("Failed to load customers and drivers");
+      }
+    };
+    
+    if (isOpen) {
+      loadData();
+    }
+  }, [isOpen]);
+
+  // Calculate rent based on hours
+  useEffect(() => {
+    if (formData.startDate && formData.endDate && tractor?.hourlyRate) {
       const start = new Date(formData.startDate);
       const end = new Date(formData.endDate);
       
       if (end > start) {
         const hours = differenceInHours(end, start);
-        const days = Math.ceil(hours / 24);
+        const rent = hours * tractor.hourlyRate;
         
-        setDuration({ days, hours });
-        
-        if (formData.rentalType === "daily") {
-          setTotalAmount(days * tractor.dailyRate);
-        } else {
-          setTotalAmount(hours * tractor.hourlyRate);
-        }
+        setTotalHours(hours);
+        setTotalRent(rent);
       } else {
-        setDuration({ days: 0, hours: 0 });
-        setTotalAmount(0);
+        setTotalHours(0);
+        setTotalRent(0);
       }
     }
-  }, [formData.startDate, formData.endDate, formData.rentalType, tractor]);
+  }, [formData.startDate, formData.endDate, tractor]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.customerName || !formData.farmLocation || !formData.startDate || !formData.endDate) {
+    if (!formData.customerId || !formData.driverId || !formData.farmLocation || !formData.startDate || !formData.endDate) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -61,34 +91,54 @@ const BookingModal = ({ tractor, isOpen, onClose, onSuccess }) => {
       return;
     }
 
+    const paymentAmount = parseFloat(formData.paymentAmount) || 0;
+    if (paymentAmount < 0) {
+      toast.error("Payment amount cannot be negative");
+      return;
+    }
+
+    if (paymentAmount > totalRent) {
+      toast.error("Payment amount cannot exceed total rent");
+      return;
+    }
+
     setLoading(true);
     try {
+      const selectedCustomer = customers.find(c => c.Id == formData.customerId);
+      const selectedDriver = drivers.find(d => d.Id == formData.driverId);
+      
       const rental = {
         tractorId: tractor.Id,
-        customerName: formData.customerName,
+        customerId: formData.customerId,
+        customerName: selectedCustomer?.name || "",
+        driverId: formData.driverId,
+        driverName: selectedDriver?.name || "",
         farmLocation: formData.farmLocation,
         startDate: formData.startDate,
         endDate: formData.endDate,
-        rentalType: formData.rentalType,
-        totalAmount,
-        paymentStatus: "Pending"
+        totalHours: totalHours,
+        hourlyRate: tractor.hourlyRate,
+        totalRent: totalRent,
+        paymentAmount: paymentAmount,
+        paymentStatus: paymentAmount >= totalRent ? "Paid" : paymentAmount > 0 ? "Partial" : "Pending"
       };
 
       await rentalService.create(rental);
-      toast.success(`Booking confirmed for ${tractor.name}!`);
+      toast.success(`Rent entry created for ${tractor.name}! Total: ₹${totalRent.toLocaleString()}`);
       onSuccess();
       onClose();
       
       // Reset form
       setFormData({
-        customerName: "",
+        customerId: "",
+        driverId: "",
         farmLocation: "",
         startDate: "",
         endDate: "",
-        rentalType: "daily"
+        paymentAmount: ""
       });
     } catch (error) {
-      toast.error("Failed to create booking");
+      toast.error("Failed to create rent entry");
     } finally {
       setLoading(false);
     }
@@ -121,35 +171,47 @@ const BookingModal = ({ tractor, isOpen, onClose, onSuccess }) => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Customer Name *"
-              name="customerName"
-              value={formData.customerName}
-              onChange={handleInputChange}
-              placeholder="Enter customer name"
-              required
-            />
+<form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Select Customer *"
+                name="customerId"
+                value={formData.customerId}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Choose customer...</option>
+                {customers.map(customer => (
+                  <option key={customer.Id} value={customer.Id}>
+                    {customer.name} - {customer.location}
+                  </option>
+                ))}
+              </Select>
+
+              <Select
+                label="Select Driver *"
+                name="driverId"
+                value={formData.driverId}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Choose driver...</option>
+                {drivers.map(driver => (
+                  <option key={driver.Id} value={driver.Id}>
+                    {driver.name} ({driver.experience})
+                  </option>
+                ))}
+              </Select>
+            </div>
 
             <Input
               label="Farm Location *"
               name="farmLocation"
               value={formData.farmLocation}
               onChange={handleInputChange}
-              placeholder="Enter farm address"
+              placeholder="Enter farm address or location"
               required
             />
-
-            <Select
-              label="Rental Type *"
-              name="rentalType"
-              value={formData.rentalType}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="daily">Daily Rental</option>
-              <option value="hourly">Hourly Rental</option>
-            </Select>
 
             <div className="grid grid-cols-2 gap-4">
               <Input
@@ -174,33 +236,42 @@ const BookingModal = ({ tractor, isOpen, onClose, onSuccess }) => {
             </div>
 
             {/* Calculation Summary */}
-            {totalAmount > 0 && (
-              <div className="bg-primary/5 rounded-lg p-4 space-y-2">
-                <h5 className="font-medium text-gray-900">Rental Summary</h5>
-                <div className="text-sm space-y-1">
+{totalRent > 0 && (
+              <div className="bg-primary/5 rounded-lg p-4 space-y-3">
+                <h5 className="font-medium text-gray-900">Auto-Calculated Rent</h5>
+                <div className="text-sm space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Duration:</span>
                     <span className="text-gray-900">
-                      {formData.rentalType === "daily" 
-                        ? `${duration.days} day${duration.days !== 1 ? "s" : ""}`
-                        : `${duration.hours} hour${duration.hours !== 1 ? "s" : ""}`
-                      }
+                      {totalHours} hour{totalHours !== 1 ? "s" : ""}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Rate:</span>
                     <span className="text-gray-900">
-                      ₹{formData.rentalType === "daily" ? tractor.dailyRate : tractor.hourlyRate}
-                      /{formData.rentalType === "daily" ? "day" : "hr"}
+                      ₹{tractor.hourlyRate}/hour
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold text-primary border-t pt-2">
-                    <span>Total Amount:</span>
-                    <span>₹{totalAmount.toLocaleString()}</span>
+                    <span>Total Rent:</span>
+                    <span>₹{totalRent.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
             )}
+
+            <Input
+              label="Payment Amount"
+              name="paymentAmount"
+              type="number"
+              value={formData.paymentAmount}
+              onChange={handleInputChange}
+              placeholder="Enter payment amount (optional)"
+              min="0"
+              max={totalRent}
+              step="0.01"
+              helper={`Maximum: ₹${totalRent.toLocaleString()}`}
+            />
 
             <div className="flex space-x-3 pt-4">
               <Button
@@ -216,7 +287,7 @@ const BookingModal = ({ tractor, isOpen, onClose, onSuccess }) => {
                 type="submit"
                 className="flex-1"
                 loading={loading}
-                disabled={totalAmount === 0}
+disabled={totalRent === 0}
               >
                 Confirm Booking
               </Button>
