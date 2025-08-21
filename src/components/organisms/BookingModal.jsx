@@ -111,9 +111,10 @@ const rental = {
         Name: `Rental for ${selectedCustomer?.name || "Customer"}`,
         tractor_id_c: tractor.Id,
         customer_name_c: selectedCustomer?.name || "",
+customer_name_c: formData.customerId, // This should be the customer name, not ID
         farm_location_c: formData.farmLocation,
-        start_date_c: formData.startDate,
-        end_date_c: formData.endDate,
+        start_date_c: new Date(formData.startDate).toISOString(),
+        end_date_c: new Date(formData.endDate).toISOString(),
         rental_type_c: "hourly",
         total_amount_c: totalRent,
         payment_status_c: paymentAmount >= totalRent ? "Paid" : paymentAmount > 0 ? "Partial" : "Pending"
@@ -168,36 +169,15 @@ const rental = {
           </div>
 
 <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Select
-                label="Select Customer *"
+            <div className="grid grid-cols-1 gap-4">
+              <Input
+                label="Customer Name *"
                 name="customerId"
                 value={formData.customerId}
                 onChange={handleInputChange}
+                placeholder="Enter customer name"
                 required
-              >
-                <option value="">Choose customer...</option>
-                {customers.map(customer => (
-                  <option key={customer.Id} value={customer.Id}>
-                    {customer.name} - {customer.location}
-                  </option>
-                ))}
-              </Select>
-
-              <Select
-                label="Select Driver *"
-                name="driverId"
-                value={formData.driverId}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Choose driver...</option>
-                {drivers.map(driver => (
-                  <option key={driver.Id} value={driver.Id}>
-                    {driver.name} ({driver.experience})
-                  </option>
-                ))}
-              </Select>
+              />
             </div>
 
             <Input
@@ -245,7 +225,7 @@ const rental = {
 <div className="flex justify-between">
                     <span className="text-gray-600">Rate:</span>
                     <span className="text-gray-900">
-                      ₹{tractor.hourly_rate_c}/hour
+                      ₹{tractor.hourly_rate_c || 0}/hour
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold text-primary border-t pt-2">

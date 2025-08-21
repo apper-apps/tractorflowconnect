@@ -62,9 +62,12 @@ filtered = filtered.filter(rental =>
     if (selectedStatus !== "All") {
       filtered = filtered.filter(rental => rental.payment_status_c === selectedStatus);
     }
-
-    // Sort by start date (newest first)
-    filtered = filtered.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+// Sort by start date (newest first)
+    filtered = filtered.sort((a, b) => {
+      const dateA = a.start_date_c ? new Date(a.start_date_c) : new Date(0);
+      const dateB = b.start_date_c ? new Date(b.start_date_c) : new Date(0);
+      return dateB - dateA;
+    });
 
     setFilteredRentals(filtered);
   }, [rentals, searchTerm, selectedStatus]);
@@ -179,7 +182,7 @@ const statusCounts = rentals.reduce((acc, rental) => {
         <div className="space-y-4">
           {filteredRentals.map((rental) => {
 const tractorId = rental.tractor_id_c?.Id || rental.tractor_id_c;
-            const tractor = getTractorById(tractorId);
+            const tractor = getTractorById(tractorId) || { Name: 'Unknown Tractor' };
             return (
               <Card key={rental.Id} className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">

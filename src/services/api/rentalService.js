@@ -92,7 +92,7 @@ export const rentalService = {
     }
   },
 
-  async create(rental) {
+async create(rental) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -102,15 +102,15 @@ export const rentalService = {
 
       // Only include Updateable fields and ensure proper data formatting
       const rentalData = {
-        Name: rental.Name || rental.customer_name_c,
+        Name: rental.Name || `Rental for ${rental.customer_name_c}`,
         tractor_id_c: parseInt(rental.tractor_id_c),
         customer_name_c: rental.customer_name_c,
         farm_location_c: rental.farm_location_c,
         start_date_c: rental.start_date_c,
         end_date_c: rental.end_date_c,
-        rental_type_c: rental.rental_type_c,
-        total_amount_c: parseInt(rental.total_amount_c),
-        payment_status_c: rental.payment_status_c,
+        rental_type_c: rental.rental_type_c || "hourly",
+        total_amount_c: parseFloat(rental.total_amount_c) || 0,
+        payment_status_c: rental.payment_status_c || "Pending",
         Tags: rental.Tags || ""
       };
 
