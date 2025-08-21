@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Route, Router, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { clearUser, setUser } from "@/store/userSlice";
@@ -96,7 +96,7 @@ function AppContent() {
           dispatch(clearUser());
         }
 },
-      onError: function(error) {
+onError: function(error) {
         console.error("Authentication failed:", error);
         setIsInitialized(true);
       }
@@ -174,10 +174,10 @@ function AppContent() {
 }
 
 function App() {
-  return (
-    <Router>
+return (
+    <BrowserRouter>
       <AppContent />
-    </Router>
+    </BrowserRouter>
   );
 }
 
