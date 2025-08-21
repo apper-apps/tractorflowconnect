@@ -1,23 +1,23 @@
-import { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import { setUser, clearUser } from './store/userSlice';
-import Layout from "@/components/organisms/Layout";
-import Login from "@/components/pages/Login";
-import Signup from "@/components/pages/Signup";
-import Callback from "@/components/pages/Callback";
-import ErrorPage from "@/components/pages/ErrorPage";
-import ResetPassword from "@/components/pages/ResetPassword";
-import PromptPassword from "@/components/pages/PromptPassword";
-import Dashboard from "@/components/pages/Dashboard";
-import TractorList from "@/components/pages/TractorList";
+import React, { createContext, useEffect, useState } from "react";
+import { Route, Router, Routes, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { clearUser, setUser } from "@/store/userSlice";
 import RentRecords from "@/components/pages/RentRecords";
 import Payments from "@/components/pages/Payments";
-import Reports from "@/components/pages/Reports";
-import Customers from "@/components/pages/Customers";
 import Drivers from "@/components/pages/Drivers";
+import Signup from "@/components/pages/Signup";
+import Dashboard from "@/components/pages/Dashboard";
+import PromptPassword from "@/components/pages/PromptPassword";
+import Callback from "@/components/pages/Callback";
 import Expenses from "@/components/pages/Expenses";
+import Reports from "@/components/pages/Reports";
+import ErrorPage from "@/components/pages/ErrorPage";
+import Login from "@/components/pages/Login";
+import ResetPassword from "@/components/pages/ResetPassword";
+import Customers from "@/components/pages/Customers";
+import TractorList from "@/components/pages/TractorList";
+import Layout from "@/components/organisms/Layout";
 
 // Create auth context
 export const AuthContext = createContext(null);
@@ -95,14 +95,13 @@ function AppContent() {
           }
           dispatch(clearUser());
         }
-      },
+},
       onError: function(error) {
         console.error("Authentication failed:", error);
         setIsInitialized(true);
       }
-    });
-  }, []);// No props and state should be bound
-  
+});
+  }, []);
   // Authentication methods to share via context
   const authMethods = {
     isInitialized,
