@@ -1,25 +1,32 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Layout from "@/components/organisms/Layout";
+import Login from "@/components/pages/Login";
 import Dashboard from "@/components/pages/Dashboard";
 import TractorList from "@/components/pages/TractorList";
 import RentRecords from "@/components/pages/RentRecords";
 import Payments from "@/components/pages/Payments";
 import Reports from "@/components/pages/Reports";
-
+import Customers from "@/components/pages/Customers";
+import Drivers from "@/components/pages/Drivers";
+import Expenses from "@/components/pages/Expenses";
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="tractors" element={<TractorList />} />
-            <Route path="rentals" element={<RentRecords />} />
-            <Route path="payments" element={<Payments />} />
-            <Route path="reports" element={<Reports />} />
-          </Route>
-        </Routes>
+<Routes>
+<Route path="/login" element={<Login />} />
+<Route path="/" element={<Layout />}>
+<Route index element={<Dashboard />} />
+<Route path="tractors" element={<TractorList />} />
+<Route path="customers" element={<Customers />} />
+<Route path="drivers" element={<Drivers />} />
+<Route path="rentals" element={<RentRecords />} />
+<Route path="payments" element={<Payments />} />
+<Route path="expenses" element={<Expenses />} />
+<Route path="reports" element={<Reports />} />
+</Route>
+</Routes>
         <ToastContainer
           position="top-right"
           autoClose={3000}

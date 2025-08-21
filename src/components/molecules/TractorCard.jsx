@@ -61,25 +61,25 @@ const TractorCard = ({ tractor, onBook, onViewDetails }) => {
           </div>
         </div>
         
-        <div className="flex space-x-2">
-          {tractor.status === "Available" && (
-            <Button 
-              className="flex-1" 
-              onClick={() => onBook(tractor)}
-              icon="Calendar"
-            >
-              Book Now
-            </Button>
-          )}
-          <Button 
-            variant="outline" 
-            className={tractor.status === "Available" ? "" : "flex-1"}
-            onClick={() => onViewDetails(tractor)}
-            icon="Eye"
-          >
-            Details
-          </Button>
-        </div>
+<div className="flex space-x-2">
+{tractor.status === "Available" && (
+<Button 
+className="flex-1" 
+onClick={() => onBook(tractor)}
+icon="Calendar"
+>
+Book Now
+</Button>
+)}
+<Button 
+variant="outline" 
+className={tractor.status === "Available" ? "" : "flex-1"}
+onClick={() => onViewDetails(tractor)}
+icon="MapPin"
+>
+{tractor.status === "Available" ? "Assign to Farm" : "Details"}
+</Button>
+</div>
       </div>
     </Card>
   );

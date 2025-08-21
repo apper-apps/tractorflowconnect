@@ -6,13 +6,16 @@ import { cn } from "@/utils/cn";
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
 
-  const menuItems = [
-    { path: "/", label: "Dashboard", icon: "LayoutDashboard" },
-    { path: "/tractors", label: "Tractor Fleet", icon: "Tractor" },
-    { path: "/rentals", label: "Rent Records", icon: "FileText" },
-    { path: "/payments", label: "Payments", icon: "CreditCard" },
-    { path: "/reports", label: "Reports", icon: "BarChart3" },
-  ];
+const menuItems = [
+{ path: "/", label: "Dashboard", icon: "LayoutDashboard" },
+{ path: "/tractors", label: "Tractors", icon: "Tractor" },
+{ path: "/customers", label: "Customers", icon: "Users" },
+{ path: "/drivers", label: "Drivers", icon: "User" },
+{ path: "/rentals", label: "Rent Records", icon: "FileText" },
+{ path: "/payments", label: "Payments", icon: "CreditCard" },
+{ path: "/expenses", label: "Expenses", icon: "Receipt" },
+{ path: "/reports", label: "Reports", icon: "BarChart3" },
+];
 
   const NavItem = ({ item }) => (
     <NavLink

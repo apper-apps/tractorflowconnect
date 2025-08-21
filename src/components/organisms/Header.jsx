@@ -49,15 +49,26 @@ const Header = ({ onToggleSidebar }) => {
             <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full"></span>
           </Button>
           
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-accent to-warning rounded-full flex items-center justify-center">
-              <ApperIcon name="User" className="w-4 h-4 text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-medium text-gray-900">Admin User</p>
-              <p className="text-xs text-gray-500">Manager</p>
-            </div>
-          </div>
+<div className="flex items-center space-x-3">
+<div className="flex items-center space-x-2">
+<div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+<ApperIcon name="User" className="w-4 h-4 text-white" />
+</div>
+<div className="hidden sm:block">
+<p className="text-sm font-medium text-gray-900">Farm Manager</p>
+<p className="text-xs text-gray-500">Administrator</p>
+</div>
+</div>
+<Button
+variant="ghost"
+size="sm"
+icon="LogOut"
+onClick={() => window.location.href = "/login"}
+className="text-gray-600 hover:text-gray-900"
+>
+<span className="hidden sm:inline ml-1">Logout</span>
+</Button>
+</div>
         </div>
       </div>
     </header>
