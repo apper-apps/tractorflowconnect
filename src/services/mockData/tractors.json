@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "name": "John Deere 5075E",
+    "number": "JD001",
+    "status": "Available",
+    "hourlyRate": 800,
+    "dailyRate": 4500,
+    "imageUrl": ""
+  },
+  {
+    "Id": 2,
+    "name": "Mahindra 575 DI",
+    "number": "MH002",
+    "status": "On Rent",
+    "hourlyRate": 700,
+    "dailyRate": 4000,
+    "imageUrl": ""
+  },
+  {
+    "Id": 3,
+    "name": "Swaraj 855 FE",
+    "number": "SW003",
+    "status": "Available",
+    "hourlyRate": 650,
+    "dailyRate": 3500,
+    "imageUrl": ""
+  },
+  {
+    "Id": 4,
+    "name": "New Holland 3630",
+    "number": "NH004",
+    "status": "Maintenance",
+    "hourlyRate": 750,
+    "dailyRate": 4200,
+    "imageUrl": ""
+  },
+  {
+    "Id": 5,
+    "name": "Massey Ferguson 1035",
+    "number": "MF005",
+    "status": "Available",
+    "hourlyRate": 850,
+    "dailyRate": 4800,
+    "imageUrl": ""
+  },
+  {
+    "Id": 6,
+    "name": "Sonalika DI 750 III",
+    "number": "SN006",
+    "status": "On Rent",
+    "hourlyRate": 600,
+    "dailyRate": 3200,
+    "imageUrl": ""
+  },
+  {
+    "Id": 7,
+    "name": "John Deere 3038E",
+    "number": "JD007",
+    "status": "Available",
+    "hourlyRate": 900,
+    "dailyRate": 5000,
+    "imageUrl": ""
+  },
+  {
+    "Id": 8,
+    "name": "Mahindra Arjun 605",
+    "number": "MH008",
+    "status": "Available",
+    "hourlyRate": 750,
+    "dailyRate": 4300,
+    "imageUrl": ""
+  }
+]

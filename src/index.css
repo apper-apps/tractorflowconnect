@@ -1,0 +1,70 @@
+@import "react-toastify/dist/ReactToastify.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .font-display {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-bg {
+    background: linear-gradient(135deg, #2D5016 0%, #7CB342 100%);
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .card-hover {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-accent to-warning hover:from-warning hover:to-accent transform hover:scale-105 active:scale-95 transition-all duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary transform hover:scale-105 active:scale-95 transition-all duration-200;
+  }
+}
+
+/* Toast Styling */
+.Toastify__toast-container {
+  width: 320px;
+  font-size: 14px;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Inter', sans-serif;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #4CAF50 0%, #7CB342 100%);
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #EF5350 0%, #FF6F00 100%);
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, #FFA726 0%, #FF6F00 100%);
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.8);
+}

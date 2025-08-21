@@ -1,0 +1,50 @@
+[
+  {
+    "Id": 1,
+    "rentalId": 1,
+    "amount": 12000,
+    "paidDate": "2024-01-19T14:30:00",
+    "method": "UPI",
+    "status": "Completed"
+  },
+  {
+    "Id": 2,
+    "rentalId": 3,
+    "amount": 4800,
+    "paidDate": "2024-01-12T18:00:00",
+    "method": "Cash",
+    "status": "Completed"
+  },
+  {
+    "Id": 3,
+    "rentalId": 5,
+    "amount": 9600,
+    "paidDate": "2024-01-11T16:45:00",
+    "method": "Bank Transfer",
+    "status": "Completed"
+  },
+  {
+    "Id": 4,
+    "rentalId": 2,
+    "amount": 6400,
+    "paidDate": "2024-01-22T10:00:00",
+    "method": "UPI",
+    "status": "Pending"
+  },
+  {
+    "Id": 5,
+    "rentalId": 4,
+    "amount": 7000,
+    "paidDate": "2024-01-27T12:00:00",
+    "method": "Cash",
+    "status": "Pending"
+  },
+  {
+    "Id": 6,
+    "rentalId": 6,
+    "amount": 10000,
+    "paidDate": "2024-01-24T20:00:00",
+    "method": "Card",
+    "status": "Failed"
+  }
+]
