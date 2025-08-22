@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 export const customerService = {
-  async getAll() {
+async getAll() {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -8,7 +8,7 @@ export const customerService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-const params = {
+      const params = {
         fields: [
           { field: { Name: "customer_name_c" } },
           { field: { Name: "farm_location_c" } },
@@ -68,21 +68,25 @@ const params = {
           }
           
           // Check if customer is active (has recent rentals)
-          const rentalDate = new Date(rental.start_date_c);
-          if (!customer.lastRental || rentalDate > new Date(customer.lastRental)) {
-            customer.lastRental = rental.start_date_c;
-          }
-          
-          const sixMonthsAgo = new Date();
-          sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-          if (rentalDate > sixMonthsAgo) {
-            customer.isActive = true;
+          if (rental.start_date_c) {
+            const rentalDate = new Date(rental.start_date_c);
+            if (!customer.lastRental || rentalDate > new Date(customer.lastRental)) {
+              customer.lastRental = rental.start_date_c;
+            }
+            
+            const sixMonthsAgo = new Date();
+            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+            if (rentalDate > sixMonthsAgo) {
+              customer.isActive = true;
+            }
           }
           
           // Check if customer is new this month
-          const createdDate = new Date(rental.CreatedOn);
-          if (createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear) {
-            customer.isNewThisMonth = true;
+          if (rental.CreatedOn) {
+            const createdDate = new Date(rental.CreatedOn);
+            if (createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear) {
+              customer.isNewThisMonth = true;
+            }
           }
         }
       });

@@ -24,17 +24,10 @@ const [formData, setFormData] = useState({
   const [loading, setLoading] = useState(false);
 
 // Load customers and drivers on component mount
-  useEffect(() => {
+useEffect(() => {
     const loadData = async () => {
       try {
-        // Mock data for customers and drivers
-        const mockCustomers = [
-          { Id: 1, name: "Rajesh Kumar", location: "Village Rampur" },
-          { Id: 2, name: "Suresh Patel", location: "Kisan Nagar" },
-          { Id: 3, name: "Mahesh Singh", location: "Krishi Colony" },
-          { Id: 4, name: "Ramesh Yadav", location: "Farmer's Hub" }
-        ];
-        
+        // Mock data for drivers only - customers will be entered directly
         const mockDrivers = [
           { Id: 1, name: "Vikram Singh", experience: "5 years" },
           { Id: 2, name: "Arjun Kumar", experience: "8 years" },
@@ -42,10 +35,9 @@ const [formData, setFormData] = useState({
           { Id: 4, name: "Ravi Patel", experience: "10 years" }
         ];
         
-        setCustomers(mockCustomers);
         setDrivers(mockDrivers);
       } catch (error) {
-        toast.error("Failed to load customers and drivers");
+        toast.error("Failed to load drivers");
       }
     };
     
@@ -104,14 +96,12 @@ const handleSubmit = async (e) => {
 
     setLoading(true);
     try {
-      const selectedCustomer = customers.find(c => c.Id == formData.customerId);
-      const selectedDriver = drivers.find(d => d.Id == formData.driverId);
+const selectedDriver = drivers.find(d => d.Id == formData.driverId);
       
-const rental = {
-        Name: `Rental for ${selectedCustomer?.name || "Customer"}`,
+      const rental = {
+        Name: `Rental for ${formData.customerId || "Customer"}`,
         tractor_id_c: tractor.Id,
-        customer_name_c: selectedCustomer?.name || "",
-customer_name_c: formData.customerId, // This should be the customer name, not ID
+        customer_name_c: formData.customerId,
         farm_location_c: formData.farmLocation,
         start_date_c: new Date(formData.startDate).toISOString(),
         end_date_c: new Date(formData.endDate).toISOString(),
@@ -169,7 +159,7 @@ customer_name_c: formData.customerId, // This should be the customer name, not I
           </div>
 
 <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
+<div className="grid grid-cols-1 gap-4">
               <Input
                 label="Customer Name *"
                 name="customerId"

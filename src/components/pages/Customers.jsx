@@ -17,7 +17,7 @@ const Customers = () => {
   const [error, setError] = useState(null);
 const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [tractors, setTractors] = useState([]);
+const [tractors, setTractors] = useState([]);
   const [formData, setFormData] = useState({
     customer_name_c: '',
     farm_location_c: '',
@@ -70,7 +70,7 @@ const [searchTerm, setSearchTerm] = useState('');
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+setShowModal(false);
     setFormData({
       customer_name_c: '',
       farm_location_c: '',
@@ -92,7 +92,7 @@ const [searchTerm, setSearchTerm] = useState('');
     }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.customer_name_c || !formData.farm_location_c || !formData.tractor_id_c || 
@@ -116,7 +116,7 @@ const [searchTerm, setSearchTerm] = useState('');
         payment_status_c: formData.payment_status_c
       };
 
-      await rentalService.create([rentalData]);
+      await rentalService.create(rentalData);
       toast.success('Customer rental created successfully!');
       handleCloseModal();
       loadCustomers();
