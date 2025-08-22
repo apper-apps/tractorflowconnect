@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { toast } from 'react-toastify';
 export const paymentService = {
   async getAll() {
     try {
