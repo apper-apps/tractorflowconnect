@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-
+import { toast } from 'react-toastify';
 export const paymentService = {
   async getAll() {
     try {
@@ -9,7 +9,7 @@ export const paymentService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "rental_id_c" } },
@@ -53,7 +53,7 @@ export const paymentService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "rental_id_c" } },
@@ -94,7 +94,7 @@ export const paymentService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      // Only include Updateable fields and ensure proper data formatting
+// Only include Updateable fields and ensure proper data formatting
       const paymentData = {
         Name: payment.Name || `Payment for ${payment.rental_id_c}`,
         rental_id_c: parseInt(payment.rental_id_c),
@@ -155,7 +155,7 @@ export const paymentService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      // Only include Updateable fields
+// Only include Updateable fields
       const updateData = {
         Id: parseInt(id),
         ...(updates.Name && { Name: updates.Name }),
@@ -217,7 +217,7 @@ export const paymentService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         RecordIds: [parseInt(id)]
       };
 

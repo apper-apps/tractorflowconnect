@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-
+import { toast } from 'react-toastify';
 export const tractorService = {
   async getAll() {
     try {
@@ -9,7 +9,7 @@ export const tractorService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "number_c" } },
@@ -53,7 +53,7 @@ export const tractorService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "number_c" } },
@@ -94,7 +94,7 @@ export const tractorService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      // Only include Updateable fields
+// Only include Updateable fields
       const tractorData = {
         Name: tractor.Name,
         number_c: tractor.number_c,
@@ -155,7 +155,7 @@ export const tractorService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      // Only include Updateable fields
+// Only include Updateable fields
       const updateData = {
         Id: parseInt(id),
         ...(updates.Name && { Name: updates.Name }),
@@ -217,7 +217,7 @@ export const tractorService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         RecordIds: [parseInt(id)]
       };
 

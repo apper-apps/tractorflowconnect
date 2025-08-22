@@ -102,6 +102,7 @@ onError: function(error) {
       }
 });
   }, []);
+  
   // Authentication methods to share via context
   const authMethods = {
     isInitialized,

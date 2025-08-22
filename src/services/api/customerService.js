@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-
+import { toast } from 'react-toastify';
 export const customerService = {
   async getAll() {
     try {
@@ -9,7 +9,7 @@ export const customerService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "customer_name_c" } },
           { field: { Name: "farm_location_c" } },
@@ -122,7 +122,7 @@ export const customerService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "tractor_id_c" } },
