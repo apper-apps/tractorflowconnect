@@ -1,16 +1,34 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { customerService } from "@/services/api/customerService";
+import { rentalService } from "@/services/api/rentalService";
+import { tractorService } from "@/services/api/tractorService";
+import ApperIcon from "@/components/ApperIcon";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import { customerService } from '@/services/api/customerService';
+import Input from "@/components/atoms/Input";
+import Select from "@/components/atoms/Select";
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [stats, setStats] = useState({ total: 0, active: 0, newThisMonth: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [tractors, setTractors] = useState([]);
+  const [formData, setFormData] = useState({
+    customer_name_c: '',
+    farm_location_c: '',
+    tractor_id_c: '',
+    start_date_c: '',
+    end_date_c: '',
+    rental_type_c: 'daily',
+    total_amount_c: '',
+    payment_status_c: 'Pending'
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadCustomers();
@@ -33,6 +51,80 @@ const Customers = () => {
       console.error('Error loading customers:', err);
     } finally {
       setIsLoading(false);
+    }
+};
+
+  const loadTractors = async () => {
+    try {
+      const tractorData = await tractorService.getAll();
+      setTractors(tractorData || []);
+    } catch (error) {
+      console.error("Error loading tractors:", error);
+      toast.error("Failed to load tractors");
+    }
+  };
+
+  const handleAddCustomer = () => {
+    setShowModal(true);
+    loadTractors();
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setFormData({
+      customer_name_c: '',
+      farm_location_c: '',
+      tractor_id_c: '',
+      start_date_c: '',
+      end_date_c: '',
+      rental_type_c: 'daily',
+      total_amount_c: '',
+      payment_status_c: 'Pending'
+    });
+    setSubmitting(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.customer_name_c || !formData.farm_location_c || !formData.tractor_id_c || 
+        !formData.start_date_c || !formData.end_date_c || !formData.total_amount_c) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setSubmitting(true);
+    
+    try {
+      const rentalData = {
+        Name: `${formData.customer_name_c} - ${formData.farm_location_c}`,
+        customer_name_c: formData.customer_name_c,
+        farm_location_c: formData.farm_location_c,
+        tractor_id_c: parseInt(formData.tractor_id_c),
+        start_date_c: formData.start_date_c,
+        end_date_c: formData.end_date_c,
+        rental_type_c: formData.rental_type_c,
+        total_amount_c: parseFloat(formData.total_amount_c),
+        payment_status_c: formData.payment_status_c
+      };
+
+      await rentalService.create([rentalData]);
+      toast.success('Customer rental created successfully!');
+      handleCloseModal();
+      loadCustomers();
+    } catch (error) {
+      console.error('Error creating customer rental:', error);
+      toast.error('Failed to create customer rental');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -68,6 +160,9 @@ const Customers = () => {
         <div className="mt-4 sm:mt-0 flex space-x-3">
           <Button variant="outline" icon="Download">
             Export List
+</Button>
+          <Button icon="Plus" onClick={handleAddCustomer}>
+            Add Customer
           </Button>
         </div>
       </div>
@@ -203,6 +298,164 @@ const Customers = () => {
               </div>
             </Card>
           ))}
+</div>
+      )}
+
+      {/* Add Customer Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Add New Customer</h2>
+                <button
+                  onClick={handleCloseModal}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ApperIcon name="X" className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Customer Name *
+                  </label>
+                  <Input
+                    name="customer_name_c"
+                    value={formData.customer_name_c}
+                    onChange={handleInputChange}
+                    placeholder="Enter customer name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Farm Location *
+                  </label>
+                  <Input
+                    name="farm_location_c"
+                    value={formData.farm_location_c}
+                    onChange={handleInputChange}
+                    placeholder="Enter farm location"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Tractor *
+                  </label>
+                  <Select
+                    name="tractor_id_c"
+                    value={formData.tractor_id_c}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Choose a tractor</option>
+                    {tractors.map((tractor) => (
+                      <option key={tractor.Id} value={tractor.Id}>
+                        {tractor.Name} - #{tractor.number_c}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date *
+                    </label>
+                    <Input
+                      type="date"
+                      name="start_date_c"
+                      value={formData.start_date_c}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Date *
+                    </label>
+                    <Input
+                      type="date"
+                      name="end_date_c"
+                      value={formData.end_date_c}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Rental Type *
+                  </label>
+                  <Select
+                    name="rental_type_c"
+                    value={formData.rental_type_c}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="hourly">Hourly</option>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Total Amount *
+                  </label>
+                  <Input
+                    type="number"
+                    name="total_amount_c"
+                    value={formData.total_amount_c}
+                    onChange={handleInputChange}
+                    placeholder="Enter amount"
+                    min="0"
+                    step="0.01"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Payment Status *
+                  </label>
+                  <Select
+                    name="payment_status_c"
+                    value={formData.payment_status_c}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Overdue">Overdue</option>
+                  </Select>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCloseModal}
+                    disabled={submitting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    icon={submitting ? "Loader" : "Plus"}
+                  >
+                    {submitting ? 'Creating...' : 'Create Customer'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       )}
     </div>
