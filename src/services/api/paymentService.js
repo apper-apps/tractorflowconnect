@@ -1,4 +1,7 @@
-import { toast } from 'react-toastify';
+// Payment service for payment_c table operations
+// ApperClient integration will be implemented here
+import toast from 'react-hot-toast';
+
 export const paymentService = {
   async getAll() {
     try {

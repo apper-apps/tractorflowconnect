@@ -1,4 +1,7 @@
-import { toast } from 'react-toastify';
+// Tractor service for tractor_c table operations  
+// ApperClient integration will be implemented here
+import { toast } from 'react-hot-toast';
+
 export const tractorService = {
   async getAll() {
     try {
