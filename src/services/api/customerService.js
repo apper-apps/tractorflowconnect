@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import { toast } from 'react-toastify';
 export const customerService = {
   async getAll() {
     try {
